@@ -1,0 +1,12 @@
+ed45a362cf8a0c3d139723bdda1fc54c *DESCRIPTION
+cbe0515ed2921e5db4622268df6b601e *NAMESPACE
+e5ab6681422b96093655ba880c3ccbdb *R/RcmdrPlugin.depthTools.R
+e9d018aa0379ce4b2b147990e7133d03 *inst/etc/menus.txt
+aa1449c65a46f98369af2a2c4c94e0b4 *man/RcmdrPlugin.depthTools-internal.Rd
+a467b69f714da0f6def5352f0bf843f9 *man/RcmdrPlugin.depthTools-package.Rd
+2131941df59f29d57023be9005129f98 *man/computeMBD.Rd
+7ac27c16ff4cb79da338c9c13e5f7d5e *man/computeScaleCurve.Rd
+30a5c6123a794f36304b6b6816e09503 *man/computeTmean.Rd
+da8fc9c36f109ae71d45758115b0ce6e *man/runDS.Rd
+013c44a0880d2eecc2ceb6ba15f25b39 *man/runRtest.Rd
+1f2b085b2cef6e755635d20fc3490dda *man/runTAD.Rd
