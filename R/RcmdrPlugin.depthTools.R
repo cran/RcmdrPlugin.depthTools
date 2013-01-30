@@ -1,10 +1,10 @@
 # Graphical interface associated to depthTools package
 
-# last modified: 01 December 2010 by A. Torrente
+# last modified: 30 January 2013 by A. Torrente
 
 # load the Rcmdr if it is not already loaded
 
-.First.lib <- function(libname, pkgname){
+.onAttach <- function(libname, pkgname){
     if (!interactive()) return()
     Rcmdr <- options()$Rcmdr
     plugins <- Rcmdr$plugins
@@ -15,6 +15,9 @@
         Commander()
         }
     }
+
+if (getRversion() >= '2.15.1') globalVariables(c('label','firstLabel','.activeDataSet','top','plotDepthVariable','optionsFrame','buttonsFrame','outputFrame','outputVariable'))
+
 
 #######################################################################################################################################
 

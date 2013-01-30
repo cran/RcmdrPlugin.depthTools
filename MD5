@@ -1,6 +1,6 @@
-ed45a362cf8a0c3d139723bdda1fc54c *DESCRIPTION
-cbe0515ed2921e5db4622268df6b601e *NAMESPACE
-e5ab6681422b96093655ba880c3ccbdb *R/RcmdrPlugin.depthTools.R
+569ddbd94d4122498e55bf7881856aab *DESCRIPTION
+1f201f9b634d9961d669c056401e2fa8 *NAMESPACE
+9cf8a5542580d729a62bcc2e482c5095 *R/RcmdrPlugin.depthTools.R
 e9d018aa0379ce4b2b147990e7133d03 *inst/etc/menus.txt
 aa1449c65a46f98369af2a2c4c94e0b4 *man/RcmdrPlugin.depthTools-internal.Rd
 a467b69f714da0f6def5352f0bf843f9 *man/RcmdrPlugin.depthTools-package.Rd
