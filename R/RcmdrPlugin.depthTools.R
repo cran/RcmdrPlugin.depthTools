@@ -1,6 +1,6 @@
 # Graphical interface associated to depthTools package
 
-# last modified: 30 January 2013 by A. Torrente
+# last modified: 23 May 2013 by A. Torrente
 
 # load the Rcmdr if it is not already loaded
 
@@ -49,7 +49,7 @@ computeMBD <-function()
            if (tclvalue(depthsValue)=="1") assign("Rdepths", TRUE, envir=env)
            else assign("Rdepths", FALSE,envir=env)
 
-           if (tclvalue(orderingValue)=="1") assign("Rordering", TRUE,envir=env)
+           if (tclvalue(orderingValue)=="1") assign("Rordering", TRUE, envir=env)
            else assign("Rordering", FALSE,envir=env)
 
            tkdestroy(OutputWin)
@@ -82,6 +82,7 @@ computeMBD <-function()
   })  ## end MACRO *output.funct*
 
 
+
   ##########       GRAPHICAL OPTIONS
   # function to set up graphical parameters  
 
@@ -99,6 +100,9 @@ computeMBD <-function()
     RYlim<-NULL
     RCd <- Rcold <- "#ff0000"
     RCRef <- RcolRef <- "#0000ff"
+    Rgradient <- FALSE
+    Rsolid <- FALSE
+    RsolidLimits <- NULL
 
     OnPlot<-function()
     {
@@ -127,8 +131,17 @@ computeMBD <-function()
         else assign("RYlim", c(as.numeric(tclvalue(YlimMin)), as.numeric(tclvalue(YlimMax))), envir=env)
 
         assign("RCd", Rcold, envir=env)                                      
-        assign("RCRef", RcolRef, envir=env)                                
+        assign("RCRef", RcolRef, envir=env)    
 
+        if (tclvalue(gradientValue)=="1") assign("Rgradient", TRUE,envir=env)
+        else assign("Rgradient", FALSE,envir=env)
+
+        if (tclvalue(solidValue)=="1") assign("Rsolid", TRUE,envir=env)
+        else assign("Rsolid", FALSE,envir=env)
+
+        if(tclvalue(solidLimit1)=="" & tclvalue(solidLimit2)=="" & tclvalue(solidLimit3)=="") assign("RsolidLimits", NULL, envir=env)
+        else assign("RsolidLimits", c(as.numeric(tclvalue(solidLimit1)), as.numeric(tclvalue(solidLimit2)), as.numeric(tclvalue(solidLimit3))), envir=env)
+                            
         tkdestroy(GraphicalWin)
         }  ## end FUNCTION onOKsub
 
@@ -164,11 +177,40 @@ computeMBD <-function()
       
       if(is.null(RYlim)) YlimMin<- tclVar("")
       else YlimMin<-tclVar(paste(RYlim[1]))
-      YlimMin.entry <-tkentry(RlimFrame,width="5",textvariable=YlimMin)
+      YlimMin.entry <-tkentry(RlimFrame,width="7",textvariable=YlimMin)
       if (is.null(RYlim)) YlimMax<- tclVar("")
       else YlimMax<-tclVar(paste(RYlim[2]))
-      YlimMax.entry <-tkentry(RlimFrame,width="5",textvariable=YlimMax)
+      YlimMax.entry <-tkentry(RlimFrame,width="7",textvariable=YlimMax)
       tkgrid(tklabel(RlimFrame,text=gettextRcmdr("y limits of the graph:")),YlimMin.entry,YlimMax.entry)
+
+      RsolidFrame <- tkframe(GraphicalFrame, borderwidth=2)
+      solid.lab <- tklabel(RsolidFrame, text=gettextRcmdr("  Plot central bands"))
+      solid.check <- tkcheckbutton(RsolidFrame)
+      if(Rsolid) solidValue <- tclVar("1")
+      else solidValue <- tclVar("0")
+      tkconfigure(solid.check,variable=solidValue)
+      tkgrid(solid.check,solid.lab,sticky="e")   
+
+
+      RsolidLimitsFrame<-tkframe(GraphicalFrame,borderwidth=2)
+      if(is.null(RsolidLimits)) solidLimit1<- tclVar("")
+      else solidLimit1<-tclVar(paste(RsolidLimits[1]))
+      solidLimit1.entry <-tkentry(RsolidLimitsFrame,width="5",textvariable=solidLimit1)
+      if (is.null(RsolidLimits)) solidLimit2<- tclVar("")
+      else solidLimit2<-tclVar(paste(RsolidLimits[2]))
+      solidLimit2.entry <-tkentry(RsolidLimitsFrame,width="5",textvariable=solidLimit2)
+      if (is.null(RsolidLimits)) solidLimit3<- tclVar("")
+      else solidLimit3<-tclVar(paste(RsolidLimits[3]))
+      solidLimit3.entry <-tkentry(RsolidLimitsFrame,width="5",textvariable=solidLimit3)
+      tkgrid(tklabel(RsolidLimitsFrame,text=gettextRcmdr("% of curves in the bands:")),solidLimit1.entry,solidLimit2.entry, solidLimit3.entry)
+
+      RgradientFrame <- tkframe(GraphicalFrame, borderwidth=2)
+      gradient.lab <- tklabel(RgradientFrame, text=gettextRcmdr("  Use grayscale"))
+      gradient.check <- tkcheckbutton(RgradientFrame)
+      if(Rgradient) gradientValue <- tclVar("1")
+      else gradientValue <- tclVar("0")
+      tkconfigure(gradient.check,variable=gradientValue)
+      tkgrid(gradient.check,gradient.lab,sticky="e")   
 
       RcoldFrame<-tkframe(GraphicalFrame,borderwidth=2)  
       RcolRefFrame<-tkframe(GraphicalFrame,borderwidth=2)  
@@ -205,8 +247,14 @@ computeMBD <-function()
       tkgrid(tklabel(GraphicalFrame, text=" "))
       tkgrid(RlimFrame)
       tkgrid(tklabel(GraphicalFrame, text=" "))
+      tkgrid(RsolidFrame)
+      tkgrid(RsolidLimitsFrame)
+      tkgrid(tklabel(GraphicalFrame, text=" "))
+      tkgrid(tklabel(GraphicalFrame, text=" "))
+      tkgrid(RgradientFrame)
       tkgrid(RcoldFrame)
       tkgrid(RcolRefFrame)
+      tkgrid(tklabel(GraphicalFrame, text=" "))
       tkgrid(SubOK.but)
       tkgrid(tklabel(GraphicalFrame, text=" "))
       tkgrid(GraphicalFrame, sticky="ns")
@@ -216,6 +264,14 @@ computeMBD <-function()
     Plot.but<-tkbutton(PlotFrame, textvariable=.PlotLabel, command=OnPlot, borderwidth=3)
     tkgrid(Plot.but, sticky="ew")
   }) ## end MACRO PLOT.MBD
+
+
+
+
+
+
+
+
 
   ###########################     Window 'top'   #################################
   initializeDialog(title=gettextRcmdr("Modified Band Depth"))
@@ -232,7 +288,10 @@ computeMBD <-function()
        if ((is.null(RXLabel)|(RXLabel==""))==FALSE) {plotting <- paste(plotting, ", xlab = '",RXLabel,"'",sep="")}
        if ((is.null(RYLabel)|(RYLabel==""))==FALSE) {plotting <- paste(plotting, ", ylab = '",RYLabel,"'",sep="")}
        if (is.null(RYlim)==FALSE) {plotting <- paste(plotting, ", ylim = c(",RYlim[1],",",RYlim[2],")",sep="")}
-       plotting<-paste(plotting,", cold = '", RCd,"'", sep="")
+       plotting<-paste(plotting,", cold = '", RCd,"', grayscale = ",Rgradient,", band = ",Rsolid,sep="")
+
+
+       if (is.null(RsolidLimits)==FALSE) {plotting <- paste(plotting, ", band.limits = c(",RsolidLimits[1],",",RsolidLimits[2],",",RsolidLimits[3],")",sep="")}
      }  ## end IF (do the plot)
      else {
        plotting <- ", plotting=FALSE"
@@ -255,7 +314,7 @@ computeMBD <-function()
      if (.refData!="(the same data set)") {
         plotting <-paste( ", xRef = ", .refData, plotting,", colRef = '", RCRef,"'", sep="")
         }
-     else {plotting <- paste(plotting,", col = '", RCRef,"'",sep="")}
+     else {plotting <- paste(plotting,", col = NULL",sep="")}
      closeDialog()
 
      ### compute the MBD according to the user's selections
@@ -282,6 +341,26 @@ computeMBD <-function()
   tkgrid(tklabel(top,text=""))    
   tkgrid(buttonsFrame, sticky="w" )       #  ok, cancel, help buttons
 }  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ################################################################################################################################
 
@@ -668,7 +747,7 @@ computeTmean <- function(){
     dialogSuffix(rows=4, columns=2, focus=alphaEntry)
     }
 
-#################################################################################################################################3#################
+##################################################################################################################################################
 
 
 
@@ -688,9 +767,12 @@ plotCentralCurves <- function(){
     require(depthTools)
     .activeDataSet <- as.matrix(ActiveDataSet())
     initializeDialog(title=gettextRcmdr("Central Plot"))
+    env<-environment()
+    # variable declaration
     alphaVar <- tclVar("50")
     alphaEntry <- tkentry(top, width="4", textvariable=alphaVar)
-    env<-environment()
+    Rgradient <- FALSE
+    Rramp <- c()
 
     RcolCentralFrame<-tkframe(top,borderwidth=2)  
     RcolCentral.value <- RCentralC <- "#ff0000"
@@ -722,6 +804,43 @@ plotCentralCurves <- function(){
     ChangeColor2.button <- tkbutton(RcolExternalFrame,text=gettextRcmdr("Change Color"),command=ChangeColor2)              
     tkgrid(tklabel(RcolExternalFrame, text=gettextRcmdr(" External curves ")),canvas2,ChangeColor2.button)   
 
+    RrampFrame<-tkframe(top,borderwidth=2)     
+    Rramp1.value <- Rramp1 <- "#ff0000"
+    canvas3 <- tkcanvas(RrampFrame,width="20",height="20",bg=Rramp1.value)
+    ChangeColor3 <- function()                                                                              
+    {
+      Rramp1.value<-tclvalue(tcl("tk_chooseColor",initialcolor=Rramp1.value,title=gettextRcmdr("Choose a color")))  
+      if (nchar(Rramp1.value)>0)
+      {
+        tkconfigure(canvas3,bg=Rramp1.value)  
+        assign("Rramp1",Rramp1.value,envir=env)                                                                      
+      }
+    }  ## end FUNCTION ChangeColor3
+    ChangeColor3.button <- tkbutton(RrampFrame,text=gettextRcmdr("Change Color"),command=ChangeColor3)              
+    tkgrid(tklabel(RrampFrame, text=gettextRcmdr(" Deepest ")),canvas3,ChangeColor3.button)   
+
+    Rramp2.value <- Rramp2 <- "#ffd700"
+    canvas4 <- tkcanvas(RrampFrame,width="20",height="20",bg=Rramp2.value)
+    ChangeColor4 <- function()                                                                              
+    {
+      Rramp2.value<-tclvalue(tcl("tk_chooseColor",initialcolor=Rramp2.value,title=gettextRcmdr("Choose a color")))  
+      if (nchar(Rramp2.value)>0)
+      {
+        tkconfigure(canvas4,bg=Rramp2.value)  
+        assign("Rramp2",Rramp2.value,envir=env)                                                                      
+      }
+    }  ## end FUNCTION ChangeColor4
+    ChangeColor4.button <- tkbutton(RrampFrame,text=gettextRcmdr("Change Color"),command=ChangeColor4)              
+    tkgrid(tklabel(RrampFrame, text=gettextRcmdr(" Most external ")),canvas4,ChangeColor4.button)   
+
+    RgradientFrame <- tkframe(top, borderwidth=2)
+    gradient.lab <- tklabel(RgradientFrame, text=gettextRcmdr("  Gradient"))
+    gradient.check <- tkcheckbutton(RgradientFrame)
+    if(Rgradient) gradientValue <- tclVar("1")
+    else gradientValue <- tclVar("0")
+    tkconfigure(gradient.check,variable=gradientValue)
+    tkgrid(gradient.check,gradient.lab,sticky="e")   
+
     onOK <- function(){
         closeDialog()
         alpha <- as.numeric(tclvalue(alphaVar))/100
@@ -731,11 +850,23 @@ plotCentralCurves <- function(){
             }
         command <- paste(par(mar=c(8,5,5,5)))
         justDoIt
-        command <- (paste("centralPlot(",.activeDataSet,", p = ", alpha, ", col = c( '", RCentralC,"', '",RExternalC ,"' ), lty=c(1,3) )", sep="")) 
+        if (tclvalue(gradientValue)=="1") assign("Rgradient", TRUE, envir=env)
+        else assign("Rgradient", FALSE,envir=env)
+        assign("Rramp", paste("c('",Rramp1,"', '", Rramp2,"')",sep=""), envir=env)
+
+        command <- (paste("centralPlot(",.activeDataSet,", p = ", alpha, ", col.c = '", RCentralC,
+                "',  col.e = '",RExternalC ,"' , lty=c(1,3) , gradient = ", Rgradient, ", gradient.ramp = ", 
+                Rramp,")", sep=""))  
         doItAndPrint(command)
-  #          logger(command)
+
+
+
+
+
+
         tkfocus(CommanderWindow())
         }
+
     OKCancelHelp(helpSubject="centralPlot")
     tkgrid(tklabel(top, text=" % of central curves to be enhanced"), alphaEntry)
     tkgrid(tklabel(top,text=""))
@@ -743,6 +874,11 @@ plotCentralCurves <- function(){
     tkgrid(tklabel(top,text=""))
     tkgrid(RcolExternalFrame, sticky="e")
     tkgrid(tklabel(top,text=""))
+    tkgrid(RgradientFrame, sticky="e")
+    tkgrid(tklabel(top, text=" Gradient ramp for the central curves"), alphaEntry)
+    tkgrid(RrampFrame, sticky="e")
+    tkgrid(tklabel(top,text=""))
+
     tkgrid(buttonsFrame, sticky="w", columnspan=2)
     dialogSuffix(rows=4, columns=2, focus=alphaEntry)
     }
