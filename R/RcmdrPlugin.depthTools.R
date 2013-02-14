@@ -580,7 +580,7 @@ computeTmean <- function(){
     env<-environment()
     RcolFrame<-tkframe(top,borderwidth=2)  
     RcolRefFrame<-tkframe(top,borderwidth=2)                                                          
-    RcolMean.value <- RMeanC <- "#ff00ff"
+    RcolMean.value <- RMeanC <- "#00ff00"
     RcolRef.value <- RRefC <- "#0000ff"
     canvas1 <- tkcanvas(RcolFrame,width="20",height="20",bg=RcolMean.value)
     canvas2 <- tkcanvas(RcolRefFrame,width="20",height="20", bg=RcolRef.value)
@@ -633,18 +633,18 @@ computeTmean <- function(){
             if (plotTsampleValue){
                 command <- (paste("x <- as.matrix(tm$tm.x); matlines(t(x), lty=3, col='",RRefC,"', lwd=0.5)",sep=""))
                 justDoIt(command)
-                command <- paste("par(xpd=TRUE); legend('bottom',inset=-0.3, legend=c('trimmed mean','reference sample'),col=c(1,'",RRefC,"'), lty=c(1,3), lwd=c(1.5,1)) ; par(xpd=FALSE)", sep="")
+                command <- paste("par(xpd=TRUE); legend('bottom',inset=-0.3, legend=c('trimmed mean','trimmed sample'),col=c(2,'",RRefC,"'), lty=c(1,3), lwd=c(1.5,1)) ; par(xpd=FALSE)", sep="")
                 justDoIt(command)
                 }
             else {
-                command <- paste("par(xpd=TRUE); legend('bottom',inset=-0.3,legend=c('trimmed mean'),col=1,lty=1,lwd=1.5) ; par(xpd=FALSE)",sep="")
+                command <- paste("par(xpd=TRUE); legend('bottom',inset=-0.3,legend=c('trimmed mean'),col=2,lty=1,lwd=1.75) ; par(xpd=FALSE)",sep="")
                 justDoIt(command)
                 }
             if (plotMeanValue) {
                 command <- (paste ("m <- as.matrix(apply(",.activeDataSet,",2,mean)); lines(m,lty=2,col='",RMeanC,"',lwd=1.5)",sep="") )
                 justDoIt(command)
                 }
-            command <- (paste("t <- as.matrix(tm$tm); lines(t,lty=1,col=1,lwd=1.5)",sep=""))
+            command <- (paste("t <- as.matrix(tm$tm); lines(t,lty=1,col=2,lwd=1.75)",sep=""))
             justDoIt(command)
             }  ## end IF plotValue
         tkfocus(CommanderWindow())
@@ -672,4 +672,78 @@ computeTmean <- function(){
 
 
 
-#    plotMeanCheckBox<-tkcheckbutton(plotMeanFrame,variable=plotMeanVariable,state="disabled")
+
+
+
+
+
+
+
+
+################################################################################################################################
+
+
+
+plotCentralCurves <- function(){
+    require(depthTools)
+    .activeDataSet <- as.matrix(ActiveDataSet())
+    initializeDialog(title=gettextRcmdr("Central Plot"))
+    alphaVar <- tclVar("50")
+    alphaEntry <- tkentry(top, width="4", textvariable=alphaVar)
+    env<-environment()
+
+    RcolCentralFrame<-tkframe(top,borderwidth=2)  
+    RcolCentral.value <- RCentralC <- "#ff0000"
+    canvas1 <- tkcanvas(RcolCentralFrame,width="20",height="20",bg=RcolCentral.value)
+    ChangeColor1 <- function()                                                                              
+    {
+      RcolCentral.value<-tclvalue(tcl("tk_chooseColor",initialcolor=RcolCentral.value,title=gettextRcmdr("Choose a color")))  
+      if (nchar(RcolCentral.value)>0)
+      {
+        tkconfigure(canvas1,bg=RcolCentral.value)  
+        assign("RCentralC",RcolCentral.value,envir=env)                                                                      
+      }
+    }  ## end FUNCTION ChangeColor1
+    ChangeColor1.button <- tkbutton(RcolCentralFrame,text=gettextRcmdr("Change Color"),command=ChangeColor1)              
+    tkgrid(tklabel(RcolCentralFrame, text=gettextRcmdr(" Central curves ")),canvas1,ChangeColor1.button)   
+
+    RcolExternalFrame<-tkframe(top,borderwidth=2)                                                          
+    RcolExternal.value <- RExternalC <- "#C0C0C0"
+    canvas2 <- tkcanvas(RcolExternalFrame,width="20",height="20", bg=RcolExternal.value)
+    ChangeColor2 <- function()                                                                              
+    {
+      RcolExternal.value<-tclvalue(tcl("tk_chooseColor",initialcolor=RcolExternal.value,title=gettextRcmdr("Choose a color")))  
+      if (nchar(RcolExternal.value)>0)
+      {
+        tkconfigure(canvas2,bg=RcolExternal.value)  
+        assign("RExternalC",RcolExternal.value,envir=env)                                                                      
+      }
+    } ## end FUNCTION ChangeColor2
+    ChangeColor2.button <- tkbutton(RcolExternalFrame,text=gettextRcmdr("Change Color"),command=ChangeColor2)              
+    tkgrid(tklabel(RcolExternalFrame, text=gettextRcmdr(" External curves ")),canvas2,ChangeColor2.button)   
+
+    onOK <- function(){
+        closeDialog()
+        alpha <- as.numeric(tclvalue(alphaVar))/100
+        if (is.na(alpha) || alpha < 0 || alpha > 1){
+            errorCondition(recall=centralPlot, message="p must be a number between 0 and 100.")
+            return()
+            }
+        command <- paste(par(mar=c(8,5,5,5)))
+        justDoIt
+        command <- (paste("centralPlot(",.activeDataSet,", p = ", alpha, ", col = c( '", RCentralC,"', '",RExternalC ,"' ), lty=c(1,3) )", sep="")) 
+        doItAndPrint(command)
+  #          logger(command)
+        tkfocus(CommanderWindow())
+        }
+    OKCancelHelp(helpSubject="centralPlot")
+    tkgrid(tklabel(top, text=" % of central curves to be enhanced"), alphaEntry)
+    tkgrid(tklabel(top,text=""))
+    tkgrid(RcolCentralFrame, sticky="e")
+    tkgrid(tklabel(top,text=""))
+    tkgrid(RcolExternalFrame, sticky="e")
+    tkgrid(tklabel(top,text=""))
+    tkgrid(buttonsFrame, sticky="w", columnspan=2)
+    dialogSuffix(rows=4, columns=2, focus=alphaEntry)
+    }
+###########################################################################

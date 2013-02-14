@@ -1,6 +1,6 @@
 # Rcmdr menu for the depthTools package
 
-# last modified: 01 December 2010 by A. Torrente
+# last modified: 14 February 2013 by A. Torrente
 
 
 #   type    menu/item      operation/parent  label                              command/menu                activation    install?
@@ -8,6 +8,7 @@
 menu    depthMenu       topMenu         ""                                      ""                          ""                      "" 
 item    depthMenu       command         "Compute Modified Band Depth..."        computeMBD		    "activeDataSetP()"      "packageAvailable('depthTools')"
 item	depthMenu	command		"Compute trimmed mean..."		computeTmean		    "activeDataSetP()"	    "packageAvailable('depthTools')"
+item	depthMenu	command		"Plot p% central samples..."		plotCentralCurves		    "activeDataSetP()"	    "packageAvailable('depthTools')"
 item    depthMenu       command         "Scale curve..."                        computeScaleCurve	    "activeDataSetP()"      "packageAvailable('depthTools')"
 item    depthMenu       command         "Select data and run the rank test..."  runRtest                    ""                      "packageAvailable('depthTools')"
 item    depthMenu       command         "Select data and run DS classification..."                  runDS      	            ""                 	    "packageAvailable('depthTools')"
