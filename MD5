@@ -1,13 +1,13 @@
-4ff7b8633a86bb2e9508f57fafe48074 *DESCRIPTION
-1f201f9b634d9961d669c056401e2fa8 *NAMESPACE
-07a2a3cadcd2a1e7b5c9d49f5fe0bfbf *R/RcmdrPlugin.depthTools.R
+664cf79ee9eb29a995dd1542e826beb7 *DESCRIPTION
+18de3b6cb21f1c705729f64bb1fd681a *NAMESPACE
+00292be9a82368188aaac9ec4311694e *R/RcmdrPlugin.depthTools.R
 c87012976d412e58e8ca3499b48da381 *inst/etc/menus.txt
 aa1449c65a46f98369af2a2c4c94e0b4 *man/RcmdrPlugin.depthTools-internal.Rd
 1109a84bbe670f714b8134c0d6ac67c8 *man/RcmdrPlugin.depthTools-package.Rd
 17aa9977d99edadb56b200f498090b65 *man/computeMBD.Rd
 7ac27c16ff4cb79da338c9c13e5f7d5e *man/computeScaleCurve.Rd
 30a5c6123a794f36304b6b6816e09503 *man/computeTmean.Rd
-bc97ad2576ff873e3c20081835154290 *man/plotCentralCurves.Rd
+0cb11da445d9400ce53e525a0afc307e *man/plotCentralCurves.Rd
 da8fc9c36f109ae71d45758115b0ce6e *man/runDS.Rd
 013c44a0880d2eecc2ceb6ba15f25b39 *man/runRtest.Rd
 1f2b085b2cef6e755635d20fc3490dda *man/runTAD.Rd

@@ -23,7 +23,6 @@ if (getRversion() >= '2.15.1') globalVariables(c('label','firstLabel','.activeDa
 
 computeMBD <-function()
 {
-  require(tcltk)
  
   ############     OUTPUT SELECTION
   # function to select elements to output
@@ -366,7 +365,6 @@ computeMBD <-function()
 
 computeScaleCurve <- function()
 {
-  require(tcltk)
   
   ###########################     Window 'top'   #################################
   top<-tktoplevel(borderwidth=10)
@@ -408,7 +406,6 @@ computeScaleCurve <- function()
 
 runRtest <- function()
 {
-  require(tcltk)
   
   ###########################     Window 'top'   #################################
   top<-tktoplevel(borderwidth=10)
@@ -478,7 +475,6 @@ runRtest <- function()
 
 runDS <- function()
 {
-  require(tcltk)
   
   ###########################     Window 'top'   #################################
   top<-tktoplevel(borderwidth=10)
@@ -563,7 +559,6 @@ runDS <- function()
 
 runTAD <- function()
 {
-  require(tcltk)
   
   ###########################     Window 'top'   #################################
   top<-tktoplevel(borderwidth=10)
@@ -645,7 +640,7 @@ runTAD <- function()
 ################################################################################################################################
 
 computeTmean <- function(){
-    require(depthTools)
+
     .activeDataSet <- as.matrix(ActiveDataSet())
     initializeDialog(title=gettextRcmdr("Trimmed Mean"))
     alphaVar <- tclVar("20")
@@ -764,7 +759,7 @@ computeTmean <- function(){
 
 
 plotCentralCurves <- function(){
-    require(depthTools)
+
     .activeDataSet <- as.matrix(ActiveDataSet())
     initializeDialog(title=gettextRcmdr("Central Plot"))
     env<-environment()

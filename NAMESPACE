@@ -4,4 +4,6 @@ exportPattern(".")
 # Imports 
 import(Rcmdr,depthTools)
 
-importFrom(tcltk)
+importFrom("graphics", "par")
+importFrom("tcltk", "tkbutton")
+importFrom("tcltk", "tkcanvas")
